@@ -19,4 +19,6 @@ print_r(mysqli_fetch_assoc($result));
 
 // close connection
 $conn->close();
+
+echo "just checking";
 ?>
