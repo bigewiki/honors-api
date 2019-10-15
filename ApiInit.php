@@ -1,6 +1,12 @@
 <?php
 declare(strict_types=1);
-require_once('../../db.inc.php');
+$hostname = $_SERVER['HTTP_HOST'];
+
+if( $hostname == "localhost"){
+    require_once('/var/www/db.inc.php');
+} else {
+    echo "error, update db.inc location";
+}
 
 class ApiInit extends mysqli{
      public function getUri(){
