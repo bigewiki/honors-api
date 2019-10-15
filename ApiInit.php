@@ -6,34 +6,19 @@ class ApiInit extends mysqli{
      public function getUri(){
         return explode("/",trim($_SERVER['REQUEST_URI']));
     }
+
+    public function selectAll(string $inputTable){
+        $sanizedInput = $this->real_escape_string($inputTable);
+        $result = $this->query("SELECT * FROM $sanizedInput");
+        while($row = $result->fetch_assoc()){
+            $resultSet[] = $row;
+        }
+        echo json_encode($resultSet, JSON_PRETTY_PRINT);
+    }
 }
 
-
-// go global!!!
-
-$ApiInit = new ApiInit($servername, $username, $password, $dbname);
-if ($ApiInit->connect_error) {
-    die("Connection failed: " . $ApiInit->connect_error);
+$Api = new ApiInit($servername, $username, $password, $dbname);
+if ($Api->connect_error) {
+    die("Connection failed: " . $Api->connect_error);
 }
-
-function selectAll(string $table){
-    global $ApiInit;
-    $sanizedInput = $ApiInit->real_escape_string($table);
-    $result = $ApiInit->query("SELECT * FROM $sanizedInput");
-    return $result->fetch_assoc();
-}
-
-
-
-
-
-
-// print_r($ApiInit->getUri());
-
-print_r(selectAll("comments"));
-
-
-$ApiInit->close();
-
-
 ?>
