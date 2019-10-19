@@ -10,7 +10,9 @@ if( $hostname == "localhost"){
 
 class ApiInit extends mysqli{
      public function getUri(){
-        return explode("/",trim($_SERVER['REQUEST_URI']));
+        $array = explode("/",trim($_SERVER['REQUEST_URI']));
+        array_shift($array);
+        return $array;
     }
 
     public function selectAll(string $inputTable){

@@ -1,8 +1,9 @@
 RewriteEngine On
-RewriteBase /
+RewriteBase /edward/honors-api/
 RewriteRule ^index\.php$ - [L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
+RewriteRule . /edward/honors-api/index.php [L]
 
-ErrorDocument 404 ./index.php
+
+#ErrorDocument 404 /edward/honors-api/index.php
