@@ -8,7 +8,7 @@ switch ($Api->getUri()[2]) {
         include_once 'inc/sprints.inc.php';
         break;
     default:
-        include_once 'inc/404.inc.php';   
+        $Api->notFound();   
 }
 
 

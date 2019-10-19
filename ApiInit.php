@@ -9,10 +9,26 @@ if( $hostname == "localhost"){
 }
 
 class ApiInit extends mysqli{
-     public function getUri(){
+    public function getMethod(){
+        return $_SERVER['REQUEST_METHOD'];
+    }
+
+    public function getUri(){
         $array = explode("/",trim($_SERVER['REQUEST_URI']));
         array_shift($array);
         return $array;
+    }
+
+    public function notFound(){
+        header("HTTP/1.0 404 Not Found");
+        $result = array("success"=>0,"error"=>"Invalid Route");
+        echo json_encode($result, JSON_PRETTY_PRINT);
+    }
+
+    public function badMethod(){
+        header("HTTP/1.0 405 Method Not Allowed");
+        $result = array("success"=>0,"error"=>"Invalid Method");
+        echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
     public function selectAll(string $inputTable){

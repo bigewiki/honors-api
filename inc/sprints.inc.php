@@ -1,2 +1,10 @@
 <?php
-echo "hello sprints";
+
+
+switch($Api->getMethod()){
+    case "GET":
+        echo "hello GET";
+        break;
+    default:
+        $Api->badMethod();
+}
