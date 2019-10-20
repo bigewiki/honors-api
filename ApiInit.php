@@ -39,6 +39,18 @@ class ApiInit extends mysqli{
         }
         echo json_encode($resultSet, JSON_PRETTY_PRINT);
     }
+
+    public function selectToJson(string $sql){
+        $result = $this->query($sql);
+        if ($result == null || $result->num_rows == 0){
+            $resultSet = array("success"=>0,"error"=>"Empty Set");
+        } else {
+            while($row = $result->fetch_assoc()){
+                $resultSet[] = $row;
+            }
+        }
+        echo json_encode($resultSet, JSON_PRETTY_PRINT);
+    }
 }
 
 $Api = new ApiInit($servername, $username, $password, $dbname);
