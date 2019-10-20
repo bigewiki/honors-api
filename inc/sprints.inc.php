@@ -3,7 +3,6 @@
 class Sprints{
     public function getRequest(){
         global $Api;
-
         switch($Api->getUri()[3]){
             case null:
                 $Api->selectAll('sprints');

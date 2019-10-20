@@ -21,13 +21,13 @@ class ApiInit extends mysqli{
 
     public function notFound(){
         header("HTTP/1.0 404 Not Found");
-        $result = array("success"=>0,"error"=>"Invalid Route");
+        $result = array("success"=>0,"err"=>"Invalid Route");
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
     public function badMethod(){
         header("HTTP/1.0 405 Method Not Allowed");
-        $result = array("success"=>0,"error"=>"Invalid Method");
+        $result = array("success"=>0,"err"=>"Invalid Method");
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
@@ -37,15 +37,16 @@ class ApiInit extends mysqli{
     }
 
     public function selectToJson(string $sql){
-        $result = $this->query($sql);
-        if ($result == null || $result->num_rows == 0){
-            $resultSet = array("success"=>0,"error"=>"Empty Set");
+        $query = $this->query($sql);
+        if ($query == null || $query->num_rows == 0){
+            $output = array("success"=>0,"err"=>"Empty Set");
         } else {
-            while($row = $result->fetch_assoc()){
-                $resultSet[] = $row;
+            while($row = $query->fetch_assoc()){
+                $res[] = $row;
+                $output = array("success"=>1,"res"=>$res);
             }
         }
-        echo json_encode($resultSet, JSON_PRETTY_PRINT);
+        echo json_encode($output, JSON_PRETTY_PRINT);
     }
 }
 

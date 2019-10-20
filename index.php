@@ -1,7 +1,5 @@
 <?php
-require_once('ApiInit.php');
-
-// print_r($Api->getUri()[2]);
+require_once('ApiInit.inc.php');
 
 switch ($Api->getUri()[2]) {
     case "sprints":
@@ -13,9 +11,6 @@ switch ($Api->getUri()[2]) {
     default:
         $Api->notFound();   
 }
-
-
-// $Api->selectAll("users");
 
 $Api->close();
 
