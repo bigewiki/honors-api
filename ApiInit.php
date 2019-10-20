@@ -33,11 +33,7 @@ class ApiInit extends mysqli{
 
     public function selectAll(string $inputTable){
         $sanizedInput = $this->real_escape_string($inputTable);
-        $result = $this->query("SELECT * FROM $sanizedInput");
-        while($row = $result->fetch_assoc()){
-            $resultSet[] = $row;
-        }
-        echo json_encode($resultSet, JSON_PRETTY_PRINT);
+        $this->selectToJson("SELECT * FROM $sanizedInput");
     }
 
     public function selectToJson(string $sql){

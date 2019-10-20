@@ -6,7 +6,7 @@ class Sprints{
 
         switch($Api->getUri()[3]){
             case null:
-                $Api->selectToJson('SELECT * from sprints');
+                $Api->selectAll('sprints');
                 break;
             case "current":
                 $Api->selectToJson('
@@ -30,3 +30,5 @@ switch($Api->getMethod()){
     default:
         $Api->badMethod();
 }
+
+?>
