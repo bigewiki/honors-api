@@ -31,9 +31,19 @@ class ApiInit extends mysqli{
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
+    public function forbidden(){
+        header("HTTP/1.0 403 Forbidden");
+        $result = array("success"=>0,"err"=>"Not Allowed");
+        echo json_encode($result, JSON_PRETTY_PRINT);
+    }
+
     public function selectAll(string $inputTable){
-        $sanizedInput = $this->real_escape_string($inputTable);
-        $this->selectToJson("SELECT * FROM $sanizedInput");
+        if($inputTable == 'users'){
+            $this->forbidden();
+        } else {
+            $sanizedInput = $this->real_escape_string($inputTable);
+            $this->selectToJson("SELECT * FROM $sanizedInput");
+        }
     }
 
     public function selectToJson(string $sql){
@@ -43,9 +53,22 @@ class ApiInit extends mysqli{
         } else {
             while($row = $query->fetch_assoc()){
                 $res[] = $row;
-                $output = array("success"=>1,"res"=>$res);
             }
+            $output = array("success"=>1,"res"=>$res);
         }
+        echo json_encode($output, JSON_PRETTY_PRINT);
+    }
+
+    public function getSqlArray(string $sql): array{
+        $query = $this->query($sql);
+        while($row = $query->fetch_assoc()){
+            $res[] = $row;
+        }
+        return $res;
+    }
+
+    public function arrayToJson(array $inputArr){
+        $output = array("success"=>1,"res"=>$inputArr);
         echo json_encode($output, JSON_PRETTY_PRINT);
     }
 }

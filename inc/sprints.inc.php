@@ -8,12 +8,16 @@ class Sprints{
                 $Api->selectAll('sprints');
                 break;
             case "current":
-                $Api->selectToJson('
-                    SELECT *
-                    FROM sprints sp JOIN stories st ON (st.sprint_id=sp.id)
-                    JOIN users u ON (st.owner=u.id)
-                    WHERE sp.id = currentSprint()
-                ');
+                $Api->selectToJson('CALL displaySprint(currentSprint())');
+                break;
+            case "last":
+                $Api->selectToJson('CALL displaySprint(lastSprint())');
+                break;
+            case "next":
+                $Api->selectToJson('CALL displaySprint(nextSprint())');
+                break;
+            case "future":
+                $Api->selectToJson('CALL displaySprint(futureSprint())');
                 break;
             default:
                 $Api->notFound();

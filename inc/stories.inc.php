@@ -3,12 +3,19 @@
 class Stories{
     public function getRequest(){
         global $Api;
-        switch($Api->getUri()[3]){
+        $route = $Api->getUri()[3];
+        switch($route){
             case null:
                 $Api->selectAll('stories');
                 break;
             default:
-                $Api->notFound();
+                if(is_numeric($route)){
+                    $tasks = $Api->getSqlArray("call displayStoryTasks($route)");
+                    $output = array("tasks"=>$tasks);
+                    $Api->arrayToJson($output);
+                } else {
+                    $Api->notFound();
+                }
         }
     }
 }

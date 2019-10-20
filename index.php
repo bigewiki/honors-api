@@ -8,6 +8,10 @@ switch ($Api->getUri()[2]) {
     case "stories":
         include_once 'inc/stories.inc.php';
         break;
+    case "users":
+        //temporary
+        $Api->forbidden();
+        break;
     default:
         $Api->notFound();   
 }
