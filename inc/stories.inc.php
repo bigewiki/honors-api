@@ -1,6 +1,45 @@
 <?php
+//declare strict types
+
 
 class Stories{
+    private function getFullStory($route) {
+        global $Api;
+        $output = array('tasks'=>null, 'comments'=>null);
+    
+        $multiQuery = implode(";",array(
+            "CALL displayStory($route)",
+            "CALL displayStoryTasks($route)",
+            "CALL displayStoryComments($route)"
+        ));
+
+        if ($Api->multi_query($multiQuery)) {
+            $i = 1;
+            do {
+                if ($result = $Api->store_result()) {
+                    if ($i == 1) {
+                        while ($row = $result->fetch_assoc()) {
+                            $output[] = $row;
+                        }
+                        $output = $output[0];
+                    } else if ($i == 2) {
+                        while ($row = $result->fetch_assoc()) {
+                            $output['tasks'][] = $row;
+                        }
+                    } else if ($i == 3) {
+                        while ($row = $result->fetch_assoc()) {
+                            $output['comments'][] = $row;
+                        }
+                    }
+                    $i++;
+                    $result->free();
+                }
+            } while ($Api->next_result());
+        }
+
+        $Api->arrayToJson($output);
+    }
+
     public function getRequest(){
         global $Api;
         $route = $Api->getUri()[3];
@@ -10,23 +49,7 @@ class Stories{
                 break;
             default:
                 if(is_numeric($route)){
-                    $query  = "CALL displayStory($route);";
-                    $query .= "CALL displayStoryTasks($route)";
-                    //get the query result in an array
-                    if ($Api->multi_query($query)) {
-                        do {
-                            if ($result = $Api->store_result()) {
-                                while ($row = $result->fetch_assoc()) {
-                                    $results[] = $row;
-                                }
-                                $result->free();
-                            }
-                        } while ($Api->next_result());
-                    }
-                    $output = $results[0];
-                    array_shift($results);
-                    $output['tasks']=$results;
-                    $Api->arrayToJson($output);
+                    $this->getFullStory($route);
                 } else {
                     $Api->notFound();
                 }
