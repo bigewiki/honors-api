@@ -5,7 +5,7 @@ $hostname = $_SERVER['HTTP_HOST'];
 if( $hostname == "localhost"){
     require_once('/var/www/db.inc.php');
 } else {
-    echo "error, update db.inc location";
+    require_once('/home/muniz/db.inc.php');
 }
 
 class ApiInit extends mysqli{
