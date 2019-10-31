@@ -1,11 +1,12 @@
 <?php
 $hostname = $_SERVER['HTTP_HOST'];
 
-if( $hostname == "localhost"){
+if( $hostname == 'localhost'){
     require_once('/var/www/db.inc.php');
-    $docRoot = "/edward/honors-api/";
+    $docRoot = '/edward/honors-api/';
 } else {
     require_once('/home/muniz/db.inc.php');
+    $docRoot = '/honors-api/v1/';
 }
 
 ?>
