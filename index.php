@@ -1,7 +1,7 @@
 <?php
 require_once('ApiInit.inc.php');
 
-switch ($Api->getUri()[2]) {
+switch ($Api->getUri()[0]) {
     case "sprints":
         include_once 'inc/sprints.inc.php';
         break;

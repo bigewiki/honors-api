@@ -42,7 +42,7 @@ class Stories{
 
     public function getRequest(){
         global $Api;
-        $route = $Api->getUri()[3];
+        $route = $Api->getUri()[1];
         switch($route){
             case null:
                 $Api->selectAll('stories');

@@ -1,12 +1,7 @@
 <?php
 declare(strict_types=1);
-$hostname = $_SERVER['HTTP_HOST'];
 
-if( $hostname == "localhost"){
-    require_once('/var/www/db.inc.php');
-} else {
-    require_once('/home/muniz/db.inc.php');
-}
+require_once('config.inc.php');
 
 class ApiInit extends mysqli{
     public function getMethod(){
@@ -14,8 +9,10 @@ class ApiInit extends mysqli{
     }
 
     public function getUri(){
-        $array = explode("/",trim($_SERVER['REQUEST_URI']));
-        array_shift($array);
+        global $docRoot;
+        $uri = $_SERVER['REQUEST_URI'];
+        $pattern = '/' . preg_replace('|/|','\/',$docRoot) . '/';
+        $array = explode("/",preg_replace($pattern,'',$uri));
         return $array;
     }
 
@@ -77,4 +74,7 @@ $Api = new ApiInit($servername, $username, $password, $dbname);
 if ($Api->connect_error) {
     die("Connection failed: " . $Api->connect_error);
 }
+
 ?>
+
+
