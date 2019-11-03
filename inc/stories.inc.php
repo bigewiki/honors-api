@@ -78,43 +78,20 @@ class Stories{
         if(!$_POST['name']){
             $Api->badRequest('Story name parameter missing');
         } else {
-            //success but check for other params
-            $name = "'".$_POST['name']."'";
-            //check for missing description
-            if(!$_POST['description']){
-                $description = 'null';
-            } else {
-                $description = "'".$_POST['description']."'";
-            }
-            //check for missing priority
-            if(!$_POST['priority']){
-                $priority = 'null';
-            } else {
-                $priority = "'".$_POST['priority']."'";
-            }
-            //check for missing dependency
-            if(!$_POST['dependency']){
-                $dependency = 'null';
-            } else {
-                $dependency = $_POST['dependency'];
-            }
-            //check for missing time-size
-            if(!$_POST['time-size']){
-                $timeSize = 'null';
-            } else {
-                $timeSize = $_POST['time-size'];
-            }
-            //check for missing epic-id
-            if(!$_POST['epic-id']){
-                $epicId = 'null';
-            } else {
-                $epicId = $_POST['epic-id'];
-            }
-            $Api->insertRecord("CALL createStory($name,$description,$priority,$dependency,$timeSize,$epicId)");
+            $query = $Api->prepare("CALL createStory(?,?,?,?,?,?)");
+
+            $query->bind_param(
+                'sssiii',
+                $_POST['name'],
+                $_POST['description'],
+                $_POST['priority'],
+                $_POST['dependency'],
+                $_POST['time-size'],
+                $_POST['epic-id']
+            );
+            $Api->insertRecord($query);
         }
     }
-
-
 }
 $Stories = new Stories();
 

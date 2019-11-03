@@ -13,6 +13,19 @@ No parameters required, will respond with all the stories as the result.
 No parameters required, use the story id in the path to get the tasks and comments related to that story
 ex: /stories/1
 
+### POST requests
+
+#### /stories
+
+Will create a new story, requires, at the very least, a string value for the name parameter.
+
+name: string (required)
+description: string (optional)
+priority: string (optional)
+dependency: int (optional) - this if a foreign key relating to the id of the parent story
+time-size: int
+epic-id: int - this is a foreign key relating to the id of the parent epic
+
 ## SPRINTS
 
 ### GET requests

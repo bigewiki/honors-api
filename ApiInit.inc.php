@@ -81,12 +81,10 @@ class ApiInit extends mysqli{
         echo json_encode($output, JSON_PRETTY_PRINT);
     }
 
-    public function insertRecord(string $sql){
-        $query = $this->query($sql);
+    public function insertRecord(object $query){
+        $query->execute();
         if($this->affected_rows < 1){
             //fix this to output json with the error and the sql
-            echo $sql;
-            echo '<br/>';
             print_r($this->error);
         }
     }
