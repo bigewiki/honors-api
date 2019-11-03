@@ -16,9 +16,21 @@ class ApiInit extends mysqli{
         return $array;
     }
 
+    public function badRequest(string $msg){
+        header("HTTP/1.0 400 BAD REQUEST");
+        $result = array("success"=>0,"err"=>$msg);
+        echo json_encode($result, JSON_PRETTY_PRINT);
+    }
+
     public function notFound(){
         header("HTTP/1.0 404 Not Found");
         $result = array("success"=>0,"err"=>"Invalid Route");
+        echo json_encode($result, JSON_PRETTY_PRINT);
+    }
+
+    public function notFoundMsg(string $msg){
+        header("HTTP/1.0 404 Not Found");
+        $result = array("success"=>0,"err"=>$msg);
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
@@ -67,6 +79,16 @@ class ApiInit extends mysqli{
     public function arrayToJson(array $inputArr){
         $output = array("success"=>1,"res"=>$inputArr);
         echo json_encode($output, JSON_PRETTY_PRINT);
+    }
+
+    public function insertRecord(string $sql){
+        $query = $this->query($sql);
+        if($this->affected_rows < 1){
+            //fix this to output json with the error and the sql
+            echo $sql;
+            echo '<br/>';
+            print_r($this->error);
+        }
     }
 }
 
