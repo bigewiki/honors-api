@@ -1,6 +1,6 @@
-# Endpoints
+# ENDPOINTS
 
-## stories
+## STORIES
 
 ### GET requests
 
@@ -8,7 +8,12 @@
 
 No parameters required, will respond with all the stories as the result.
 
-## sprints
+#### /stories/\${NUMBER}
+
+No parameters required, use the story id in the path to get the tasks and comments related to that story
+ex: /stories/1
+
+## SPRINTS
 
 ### GET requests
 
