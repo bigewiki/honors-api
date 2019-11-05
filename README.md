@@ -19,12 +19,12 @@ ex: /stories/1
 
 Will create a new story, requires, at the very least, a string value for the name parameter.
 
-name: string (required)
-description: string (optional)
-priority: string (optional)
-dependency: int (optional) - this if a foreign key relating to the id of the parent story
-time-size: int
-epic-id: int - this is a foreign key relating to the id of the parent epic
+- name: string (required)
+- description: string (optional)
+- priority: string (optional)
+- dependency: int (optional) - this if a foreign key relating to the id of the parent story
+- time-size: int
+- epic-id: int - this is a foreign key relating to the id of the parent epic
 
 ### DELETE requests
 
