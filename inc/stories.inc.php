@@ -1,6 +1,5 @@
 <?php
-//declare strict types
-
+declare(strict_types=1);
 
 class Stories{
     public function getRequest(){
@@ -12,7 +11,7 @@ class Stories{
                 break;
             default:
                 if(is_numeric($route)){
-                    $this->getFullStory($route);
+                    $this->getFullStory(intval($route));
                 } else {
                     $Api->notFound();
                 }
@@ -31,7 +30,22 @@ class Stories{
         }
     }
 
-    private function getFullStory($route) {
+    public function deleteRequest(){
+        global $Api;
+        $route = $Api->getUri()[1];
+        switch($route){
+            case null:
+                $Api->forbidden();
+                break;
+            case (is_numeric($route)):
+                $this->deleteStory(intval($route));
+                break;
+            default:
+                $Api->forbidden();
+        }
+    }
+
+    private function getFullStory(int $route) {
         global $Api;
         $output = array('tasks'=>null, 'comments'=>null);
     
@@ -94,6 +108,13 @@ class Stories{
             $Api->insertRecord($query);
         }
     }
+
+    private function deleteStory(int $route) {
+        global $Api;
+        $query = $Api->prepare("CALL deleteStory(?)");
+        $query->bind_param('i',$route);
+        $Api->deleteRecord($query,$route,'stories');
+    }
 }
 $Stories = new Stories();
 
@@ -103,6 +124,9 @@ switch($Api->getMethod()){
         break;
     case "POST":
         $Stories->postRequest();
+        break;
+    case "DELETE":
+        $Stories->deleteRequest();
         break;
     default:
         $Api->badMethod();

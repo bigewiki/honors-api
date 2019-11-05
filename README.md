@@ -26,6 +26,13 @@ dependency: int (optional) - this if a foreign key relating to the id of the par
 time-size: int
 epic-id: int - this is a foreign key relating to the id of the parent epic
 
+### DELETE requests
+
+#### /stories/\${id}
+
+No parameters required, use the story id in the path to delete that story. Will fail if story has associated comments, tasks, or child dependencies (foreign key check failure).
+ex: /stories/34
+
 ## SPRINTS
 
 ### GET requests

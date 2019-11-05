@@ -96,14 +96,42 @@ class ApiInit extends mysqli{
 
     public function insertRecord(object $query){
         $query->execute();
-        if($this->affected_rows < 1){
-            $this->fiveHundred('No record created, please contact admin');
-        } else {
+
+        $query->bind_result($id,$name,$description,$owner,$sprint_id,$priority,$dependency,$time_size,$epic_id,$status);
+
+        while($query->fetch()){
+            $newRecord['id'] = $id;
+            $newRecord['name'] = $name;
+            $newRecord['description'] = $description;
+            $newRecord['owner'] = $owner;
+            $newRecord['sprint_id'] = $sprint_id;
+            $newRecord['priority'] = $priority;
+            $newRecord['dependency'] = $dependency;
+            $newRecord['time_size'] = $time_size;
+            $newRecord['epic_id'] = $epic_id;
+            $newRecord['status'] = $status;
+        }
+        $query->free_result();
+
+        if($newRecord['id']){
             header("HTTP/1.0 201 Created");
-            $result = array("success"=>1,"notice"=>"Record created");
+            $result = array("success"=>1,"notice"=>"Record created","res"=>$newRecord);
             echo json_encode($result, JSON_PRETTY_PRINT);
+        } else {
+            $this->badRequest('No record created, please check your parameters');
         }
     }
+
+    public function deleteRecord(object $query, int $targetId, string $tableName){
+        $query->execute();
+        if($query->affected_rows == 1){
+            $result = array("success"=>1,"notice"=>"Record $targetId deleted from $tableName");
+            echo json_encode($result, JSON_PRETTY_PRINT);
+        } else if($query->affected_rows == 0){
+            $this->notFoundMsg("Record $targetId could not be deleted, not found in $tableName");
+        }
+    }
+    
 }
 
 $Api = new ApiInit($servername, $username, $password, $dbname);
