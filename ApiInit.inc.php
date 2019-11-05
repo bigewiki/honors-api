@@ -46,6 +46,19 @@ class ApiInit extends mysqli{
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
+    public function fiveHundred(string $msg){
+        header("HTTP/1.0 500 Internal Server Error");
+        $result = array("success"=>0,"err"=>$msg);
+        echo json_encode($result, JSON_PRETTY_PRINT);
+    }
+
+    public function sanitizeAssoc(array $inputArr){
+        foreach($inputArr as $index => $value){
+            $inputArr[$index] = $this->real_escape_string(htmlentities(trim($value)));
+        }
+        return $inputArr;
+    }
+
     public function selectAll(string $inputTable){
         if($inputTable == 'users'){
             $this->forbidden();
@@ -84,8 +97,11 @@ class ApiInit extends mysqli{
     public function insertRecord(object $query){
         $query->execute();
         if($this->affected_rows < 1){
-            //fix this to output json with the error and the sql
-            print_r($this->error);
+            $this->fiveHundred('No record created, please contact admin');
+        } else {
+            header("HTTP/1.0 201 Created");
+            $result = array("success"=>1,"notice"=>"Record created");
+            echo json_encode($result, JSON_PRETTY_PRINT);
         }
     }
 }

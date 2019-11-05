@@ -80,14 +80,16 @@ class Stories{
         } else {
             $query = $Api->prepare("CALL createStory(?,?,?,?,?,?)");
 
+            $sanitizedAssoc = $Api->sanitizeAssoc($_POST);
+
             $query->bind_param(
                 'sssiii',
-                $_POST['name'],
-                $_POST['description'],
-                $_POST['priority'],
-                $_POST['dependency'],
-                $_POST['time-size'],
-                $_POST['epic-id']
+                $sanitizedAssoc['name'],
+                $sanitizedAssoc['description'],
+                $sanitizedAssoc['priority'],
+                $sanitizedAssoc['dependency'],
+                $sanitizedAssoc['time-size'],
+                $sanitizedAssoc['epic-id']
             );
             $Api->insertRecord($query);
         }
