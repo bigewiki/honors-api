@@ -9,8 +9,7 @@ switch ($Api->getUri()[0]) {
         include_once 'inc/stories.inc.php';
         break;
     case "users":
-        //temporary
-        $Api->forbidden();
+        include_once 'inc/users.inc.php';
         break;
     default:
         $Api->notFound();   
