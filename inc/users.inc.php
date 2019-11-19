@@ -23,9 +23,7 @@
                 $query->execute();
                 $query->bind_result($userId,$storedHash);
                 if($query->fetch()){
-                    $query->next_result();
-                    $query->fetch();
-                    $query->free_result();
+                    $query->close();
                     //if password validates
                     if(password_verify($_POST['password'], $storedHash)){
                         //generate the api key
@@ -37,13 +35,15 @@
                             $newKey.=random_int(0,9);
                         }
                         $newKey = substr(str_shuffle($newKey), 0, 40);
-                        //add the API key
-                        $query = $Api->query("CALL createKey($userId,'$newKey')");
-                        // echo $creation;
-                        // echo "----";
-                        // echo $expiration;
+                        //add the API key and get the creation/expiration
+                        // NEED TO DO: hash the token
+                        $query = $Api->prepare("CALL createKey(?,?)");
+                        $query->bind_param('is',$userId,$newKey);
+                        $query->execute();
+                        $query->bind_result($creation,$expiration);
+                        $query->fetch();
                         //return the API key to the consumer
-                        $Api->arrayToJson(array('key'=>$newKey));
+                        $Api->arrayToJson(array('creation'=>$creation,'expiration'=>$expiration,'key'=>$newKey));
                     } else {
                         $Api->badRequest('Incorrect username or password');
                     }
@@ -54,17 +54,6 @@
             } else {
                 $Api->badRequest('Missing params');
             }
-
-
-            //get the user's id
-            //validate the password
-            //look for existing token and delete it
-            //figure out the current server time, format in mysql datetime
-            //figure out an expiration time for the token
-            //generate a random alhpanumberic string to act as the token
-            //create a hash for that token
-            //insert the record for the token including the creation time, expiration time, a foreign key user id, and the token hash
-            //return json, including the token
         }
 
         public function postRequest(){
