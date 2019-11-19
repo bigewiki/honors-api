@@ -1,8 +1,14 @@
 <?php
     declare(strict_types=1);
     //no time yet to create new user route
-    //here a cheap way to set grey worm's pw to 'mypassword'
-    //update users set password_hash = '$2y$12$FevWjgpAQILYB5FzdX4fDu/1.B93jLIZ/h9x1Cg3Q4FRGwv19pdxK' WHERE email = 'grey.worm@targaryen.net';
+
+    //get a password hash
+    // $options = [ 'cost' => 16 ];
+    // $hashpw = password_hash($cleanPass, PASSWORD_DEFAULT, $options);
+    //echo "<h2>Hash of password: <br /> $hashpw</h2>";
+    
+    //here a cheap way to set a password in the db, 
+    //update users set password_hash = 'PASSWORDHASH' WHERE email = 'grey.worm@targaryen.net';
 
     class Users {
         private function getToken(){
@@ -12,28 +18,35 @@
                 $cleanUser = $Api->real_escape_string(trim($_POST['username']));
                 $cleanPass = $Api->real_escape_string(trim($_POST['password']));
                 //confirm that user exists
-                $query = $Api->prepare("CALL getPasswordHash(?)");
+                $query = $Api->prepare("CALL getPasswordHash(?);");
                 $query->bind_param('s',$cleanUser);
                 $query->execute();
-                $query->bind_result($storedHash);
+                $query->bind_result($userId,$storedHash);
                 if($query->fetch()){
+                    $query->next_result();
+                    $query->fetch();
                     $query->free_result();
-                    // $options = [ 'cost' => 16 ];
-                    // $query2 = $Api->prepare("CALL getPasswordHash(?)");
-                    // $query2->bind_param('i',$id);
-                    // $query2->execute();
-                    // $query2->bind_result($storedHash);
+                    //if password validates
                     if(password_verify($_POST['password'], $storedHash)){
-                        echo "verified";
+                        //generate the api key
+                        $permitted_chars = 'abcdefghijklmnopqrstuvwxyz';
+                        $newKey = '';
+                        for ( $i = 1; $i <= 40; $i++){
+                            $randIndex = random_int(0,25);
+                            $newKey.=substr($permitted_chars,$randIndex,1);
+                            $newKey.=random_int(0,9);
+                        }
+                        $newKey = substr(str_shuffle($newKey), 0, 40);
+                        //add the API key
+                        $query = $Api->query("CALL createKey($userId,'$newKey')");
+                        // echo $creation;
+                        // echo "----";
+                        // echo $expiration;
+                        //return the API key to the consumer
+                        $Api->arrayToJson(array('key'=>$newKey));
                     } else {
-                        echo "not verified";
+                        $Api->badRequest('Incorrect username or password');
                     }
-    
-                    // $hashpw = password_hash($cleanPass, PASSWORD_DEFAULT, $options);
-                    //just in case we need to get the hash out for demo reasons
-                    //echo "<h2>Hash of password: <br /> $hashpw</h2>";
-                    
-                    // password_verify($_POST['password'], $hashpw)
                 } else {
                     $Api->badRequest('Incorrect username or password');
                 }
