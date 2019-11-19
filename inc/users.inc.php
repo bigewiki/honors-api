@@ -36,14 +36,15 @@
                         }
                         $newKey = substr(str_shuffle($newKey), 0, 40);
                         //add the API key and get the creation/expiration
-                        // NEED TO DO: hash the token
+                        $keyHash = password_hash($newKey,PASSWORD_DEFAULT,[ 'cost' => 16]);
                         $query = $Api->prepare("CALL createKey(?,?)");
-                        $query->bind_param('is',$userId,$newKey);
+                        $query->bind_param('is',$userId,$keyHash);
                         $query->execute();
                         $query->bind_result($creation,$expiration);
-                        $query->fetch();
                         //return the API key to the consumer
-                        $Api->arrayToJson(array('creation'=>$creation,'expiration'=>$expiration,'key'=>$newKey));
+                        if($query->fetch()){
+                            $Api->arrayToJson(array('creation'=>$creation,'expiration'=>$expiration,'key'=>$newKey));
+                        }
                     } else {
                         $Api->badRequest('Incorrect username or password');
                     }
