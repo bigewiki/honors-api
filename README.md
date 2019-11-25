@@ -30,8 +30,9 @@ Will create a new story, requires, at the very least, a string value for the nam
 
 #### /stories/\${id}
 
-No parameters required, use the story id in the path to delete that story. Will fail if story has associated comments, tasks, or child dependencies (foreign key check failure).
+Requires JSON object containing a key of token with the value of the full token. Use the story id in the path to delete that story. Will fail if story has associated comments, tasks, or child dependencies (foreign key check failure).
 ex: /stories/34
+Request body: {"token":"asdfghjk.r4ndom1z3dt0k3nv41u3"}
 
 ## SPRINTS
 

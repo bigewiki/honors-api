@@ -133,7 +133,13 @@ class ApiInit extends mysqli{
     }
 
     public function checkToken(){
-        $fullToken = $_POST['token'];
+        if($_POST['token']){
+            $fullToken = $_POST['token'];
+        } else {
+            $requestBody = json_decode(file_get_contents('php://input'));
+            $fullToken = $requestBody->token;
+        }
+
         if($fullToken){
             $prefix = explode(".",$fullToken)[0];
             $prefix = $this->real_escape_string(trim($prefix));

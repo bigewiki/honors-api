@@ -88,32 +88,43 @@ class Stories{
 
     private function createStory() {
         global $Api;
-        //err if missing name param
-        if(!$_POST['name']){
-            $Api->badRequest('Story name parameter missing');
+        //check token
+        if($Api->checkToken()['valid']){
+            //err if missing name param
+            if(!$_POST['name']){
+                $Api->badRequest('Story name parameter missing');
+            } else {
+                $query = $Api->prepare("CALL createStory(?,?,?,?,?,?)");
+
+                $sanitizedAssoc = $Api->sanitizeAssoc($_POST);
+
+                $query->bind_param(
+                    'sssiii',
+                    $sanitizedAssoc['name'],
+                    $sanitizedAssoc['description'],
+                    $sanitizedAssoc['priority'],
+                    $sanitizedAssoc['dependency'],
+                    $sanitizedAssoc['time-size'],
+                    $sanitizedAssoc['epic-id']
+                );
+                $Api->insertRecord($query);
+            }
         } else {
-            $query = $Api->prepare("CALL createStory(?,?,?,?,?,?)");
-
-            $sanitizedAssoc = $Api->sanitizeAssoc($_POST);
-
-            $query->bind_param(
-                'sssiii',
-                $sanitizedAssoc['name'],
-                $sanitizedAssoc['description'],
-                $sanitizedAssoc['priority'],
-                $sanitizedAssoc['dependency'],
-                $sanitizedAssoc['time-size'],
-                $sanitizedAssoc['epic-id']
-            );
-            $Api->insertRecord($query);
+            $Api->badRequest($Api->checkToken()['message']);
         }
+
     }
 
     private function deleteStory(int $route) {
         global $Api;
-        $query = $Api->prepare("CALL deleteStory(?)");
-        $query->bind_param('i',$route);
-        $Api->deleteRecord($query,$route,'stories');
+        if($Api->checkToken()['valid']){
+            global $Api;
+            $query = $Api->prepare("CALL deleteStory(?)");
+            $query->bind_param('i',$route);
+            $Api->deleteRecord($query,$route,'stories');
+        } else {
+            $Api->badRequest($Api->checkToken()['message']);
+        }
     }
 }
 $Stories = new Stories();
