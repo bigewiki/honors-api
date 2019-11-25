@@ -56,3 +56,20 @@ No parameters required, will respond with the stories from the next sprint
 #### /sprints/future
 
 No parameters required, will respond with the stories from 2 sprints in the future
+
+## USERS
+
+### POST requests
+
+#### /users/login
+
+Will respond with a new API token to use in non-GET operations, a creation value, which shows when the key was created, and an expiration value, which details how long the key is valid. Requires the username (email) and password.
+
+- username: string (required)
+- password: string (required)
+
+#### /users/check-token
+
+Will respond with either an error or success message depending on the token sent in the request parameters
+
+- token: string (required)

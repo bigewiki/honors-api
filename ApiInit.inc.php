@@ -131,7 +131,31 @@ class ApiInit extends mysqli{
             $this->notFoundMsg("Record $targetId could not be deleted, not found in $tableName");
         }
     }
-    
+
+    public function checkToken(){
+        $fullToken = $_POST['token'];
+        if($fullToken){
+            $prefix = explode(".",$fullToken)[0];
+            $prefix = $this->real_escape_string(trim($prefix));
+            $query = $this->prepare("CALL checkKey(?)");
+            $query->bind_param('s',$prefix);
+            $query->execute();
+            $query->bind_result($storedValue);
+            if($query->fetch()){
+                $secret = explode($prefix.".",$fullToken)[1];
+                $storedHash = explode($prefix.".",$storedValue)[1];
+                if(password_verify($secret, $storedHash)){
+                    $this->arrayToJson(array("message"=>"Your token is valid"));
+                } else {
+                    $this->badRequest('Sorry, token is invalid or expired');
+                }
+            } else {
+                $this->badRequest('Sorry, token is invalid or expired');
+            }
+        } else {
+            $this->badRequest('Missing token');
+        }
+    }
 }
 
 $Api = new ApiInit($servername, $username, $password, $dbname);

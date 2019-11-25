@@ -35,15 +35,26 @@
                             $newKey.=random_int(0,9);
                         }
                         $newKey = substr(str_shuffle($newKey), 0, 40);
+                        //get a randomized prefix (sort of a signature to help grab it from the db)
+                        $prefix = '';
+                        for ( $i = 1; $i <= 20; $i++){
+                            $randIndex = random_int(0,25);
+                            $prefix.=substr($permitted_chars,$randIndex,1);
+                            $prefix.=random_int(0,9);
+                        }
+                        $prefix = substr(str_shuffle($prefix), 0, 10);
                         //add the API key and get the creation/expiration
                         $keyHash = password_hash($newKey,PASSWORD_DEFAULT,[ 'cost' => 16]);
+                        //combine the prefix and the hash to be sent to the DB
+                        $keyHash = $prefix.".".$keyHash;
+                        //send the combined prefix + hash
                         $query = $Api->prepare("CALL createKey(?,?)");
                         $query->bind_param('is',$userId,$keyHash);
                         $query->execute();
                         $query->bind_result($creation,$expiration);
                         //return the API key to the consumer
                         if($query->fetch()){
-                            $Api->arrayToJson(array('creation'=>$creation,'expiration'=>$expiration,'key'=>$newKey));
+                            $Api->arrayToJson(array('creation'=>$creation,'expiration'=>$expiration,'token'=>$prefix.".".$newKey));
                         }
                     } else {
                         $Api->badRequest('Incorrect username or password');
@@ -57,11 +68,19 @@
             }
         }
 
+        private function checkToken(){
+            global $Api;
+            $Api->checkToken();
+        }
+
         public function postRequest(){
             global $Api;
             switch($Api->getUri()[1]){
                 case 'login':
                     $this->getToken();
+                    break;
+                case 'check-token':
+                    $this->checkToken();
                     break;
                 default:
                     $Api->forbidden();
