@@ -70,7 +70,11 @@
 
         private function checkToken(){
             global $Api;
-            $Api->checkToken();
+            if($Api->checkToken()['valid']){
+                $Api->arrayToJson($Api->checkToken());
+            } else {
+                $Api->badRequest($Api->checkToken()['message']);
+            }
         }
 
         public function postRequest(){

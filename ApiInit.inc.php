@@ -145,15 +145,15 @@ class ApiInit extends mysqli{
                 $secret = explode($prefix.".",$fullToken)[1];
                 $storedHash = explode($prefix.".",$storedValue)[1];
                 if(password_verify($secret, $storedHash)){
-                    $this->arrayToJson(array("message"=>"Your token is valid"));
+                    return array("valid"=>true,"message"=>"Your token is valid");
                 } else {
-                    $this->badRequest('Sorry, token is invalid or expired');
+                    return array("valid"=>false,"message"=>"Sorry, token is invalid or expired");
                 }
             } else {
-                $this->badRequest('Sorry, token is invalid or expired');
+                return array("valid"=>false,"message"=>"Sorry, token is invalid or expired");
             }
         } else {
-            $this->badRequest('Missing token');
+            return array("valid"=>false,"message"=>"Missing token");
         }
     }
 }
