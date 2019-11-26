@@ -54,7 +54,9 @@ class ApiInit extends mysqli{
 
     public function sanitizeAssoc(array $inputArr){
         foreach($inputArr as $index => $value){
-            $inputArr[$index] = $this->real_escape_string(htmlentities(trim($value)));
+            if(is_string($value)){
+                $inputArr[$index] = $this->real_escape_string(htmlentities(trim($value)));
+            }
         }
         return $inputArr;
     }
@@ -133,14 +135,8 @@ class ApiInit extends mysqli{
     }
 
     public function checkToken(){
-        if($_POST['token']){
-            $fullToken = $_POST['token'];
-        } else {
-            $requestBody = json_decode(file_get_contents('php://input'));
-            $fullToken = $requestBody->token;
-        }
-
-        if($fullToken){
+        if(getallheaders()['token']){
+            $fullToken = getallheaders()['token'];
             $prefix = explode(".",$fullToken)[0];
             $prefix = $this->real_escape_string(trim($prefix));
             $query = $this->prepare("CALL checkKey(?)");

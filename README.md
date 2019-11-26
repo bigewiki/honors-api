@@ -17,8 +17,9 @@ ex: /stories/1
 
 #### /stories
 
-Will create a new story, requires, at the very least, a string value for the name parameter.
+Will create a new story, requires, at the very least, a string value for the name parameter. Currently accepts parameters in form-data. Token with key 'token' required in header.
 
+- Header > token: string (required)
 - name: string (required)
 - description: string (optional)
 - priority: string (optional)
@@ -30,9 +31,30 @@ Will create a new story, requires, at the very least, a string value for the nam
 
 #### /stories/\${id}
 
-Requires JSON object containing a key of token with the value of the full token. Use the story id in the path to delete that story. Will fail if story has associated comments, tasks, or child dependencies (foreign key check failure).
+Use the story id in the path to delete that story. Will fail if story has associated comments, tasks, or child dependencies (foreign key check failure). Also requires token to be sent in header (key of 'token').
 ex: /stories/34
-Request body: {"token":"asdfghjk.r4ndom1z3dt0k3nv41u3"}
+
+- Header > token: string (required)
+
+### PATCH requests
+
+#### /stories/\${id}
+
+Use the story id in the path to update that story. Will fail if the story does not exist. Requires key 'token' with token value in header. Accepts JSON object in request body identifying keys to be udpated:
+
+ex path: /stories/34
+ex body: {"name":"my homework","status":"in progress"}
+
+- Header > token: string (required)
+- name: string (optional)
+- description: string (optional)
+- owner: int (optional)
+- sprint: int (optional)
+- priority: string (optional)
+- dependency: int (optional)
+- size: int (optional)
+- epic: int (optional)
+- status: string (optional)
 
 ## SPRINTS
 
@@ -71,6 +93,6 @@ Will respond with a new API token to use in non-GET operations, a creation value
 
 #### /users/check-token
 
-Will respond with either an error or success message depending on the token sent in the request parameters
+Will respond with either an error or success message depending on the token sent in the request header. Expects a key of 'token' with the value of the token.
 
-- token: string (required)
+- Header > token: string (required)

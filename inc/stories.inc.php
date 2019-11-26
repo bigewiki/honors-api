@@ -45,6 +45,21 @@ class Stories{
         }
     }
 
+    public function patchRequest(){
+        global $Api;
+        $route = $Api->getUri()[1];
+        switch($route){
+            case null:
+                $Api->forbidden();
+                break;
+            case (is_numeric($route)):
+                $this->patchStory(intval($route));
+                break;
+            default:
+                $Api->forbidden();
+        }
+    }
+
     private function getFullStory(int $route) {
         global $Api;
         $output = array('tasks'=>null, 'comments'=>null);
@@ -126,6 +141,36 @@ class Stories{
             $Api->badRequest($Api->checkToken()['message']);
         }
     }
+
+    private function patchStory(int $route) {
+        global $Api;
+        if($Api->checkToken()['valid']){
+            $requestBody = json_decode(file_get_contents('php://input'));
+            $cleanRequest = $Api->sanitizeAssoc((array)$requestBody);
+            $query = $Api->prepare("CALL patchStory(?,?,?,?,?,?,?,?,?,?)");
+            $query->bind_param(
+                'issiisiiis',
+                $route,
+                $requestBody->name,
+                $requestBody->description,
+                $requestBody->owner,
+                $requestBody->sprint,
+                $requestBody->priority,
+                $requestBody->dependency,
+                $requestBody->size,
+                $requestBody->epic,
+                $requestBody->status
+            );
+            $query->execute();
+            if($query->error == "Story not found"){
+                $Api->notFoundMsg('Story not found');
+            } else {
+                $this->getFullStory($route);
+            }
+        } else {
+            $Api->badRequest($Api->checkToken()['message']);
+        }
+    }
 }
 $Stories = new Stories();
 
@@ -138,6 +183,9 @@ switch($Api->getMethod()){
         break;
     case "DELETE":
         $Stories->deleteRequest();
+        break;
+    case "PATCH":
+        $Stories->patchRequest();
         break;
     default:
         $Api->badMethod();

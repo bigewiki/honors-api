@@ -44,7 +44,7 @@
                         }
                         $prefix = substr(str_shuffle($prefix), 0, 10);
                         //add the API key and get the creation/expiration
-                        $keyHash = password_hash($newKey,PASSWORD_DEFAULT,[ 'cost' => 16]);
+                        $keyHash = password_hash($newKey,PASSWORD_DEFAULT,[ 'cost' => 14]);
                         //combine the prefix and the hash to be sent to the DB
                         $keyHash = $prefix.".".$keyHash;
                         //send the combined prefix + hash
