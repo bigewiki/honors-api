@@ -88,8 +88,19 @@ No parameters required, will respond with the stories from 2 sprints in the futu
 
 Will respond with a new API token to use in non-GET operations, a creation value, which shows when the key was created, and an expiration value, which details how long the key is valid. Requires the username (email) and password.
 
+##### REQUEST (POST PARAMETERS):
+
 - username: string (required)
 - password: string (required)
+
+##### RESPONSE OBJECT:
+
+- success: int
+- 0 is false, 1 is true
+- res: object
+- res.creation: datetime
+- res.expiration: datetime
+- res.token: string
 
 #### /users/check-token
 

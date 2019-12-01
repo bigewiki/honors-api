@@ -5,8 +5,8 @@ if( $hostname == 'localhost'){
     require_once('/var/www/db.inc.php');
     $docRoot = '/edward/honors-api/';
 } else {
-    require_once('/home/muniz/db.inc.php');
-    $docRoot = '/honors-api/v1/';
+    require_once('/home/students/superuser/db.inc.php');
+    $docRoot = '/superuser/honors-api/';
 }
 
 ?>

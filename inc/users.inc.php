@@ -3,9 +3,10 @@
     //no time yet to create new user route
 
     //get a password hash
+    // $cleanPass = 'mypassword'
     // $options = [ 'cost' => 16 ];
     // $hashpw = password_hash($cleanPass, PASSWORD_DEFAULT, $options);
-    //echo "<h2>Hash of password: <br /> $hashpw</h2>";
+    // echo "<h2>Hash of password: <br /> $hashpw</h2>";
     
     //here a cheap way to set a password in the db, 
     //update users set password_hash = 'PASSWORDHASH' WHERE email = 'grey.worm@targaryen.net';
@@ -13,6 +14,7 @@
     class Users {
         private function getToken(){
             global $Api;
+            echo $_POST['username'];
             //get POST params for username and password and sanitize
             if($_POST['username'] && $_POST['password']){
                 $cleanUser = $Api->real_escape_string(trim($_POST['username']));
