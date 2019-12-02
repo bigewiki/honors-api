@@ -14,7 +14,6 @@
     class Users {
         private function getToken(){
             global $Api;
-            echo $_POST['username'];
             //get POST params for username and password and sanitize
             if($_POST['username'] && $_POST['password']){
                 $cleanUser = $Api->real_escape_string(trim($_POST['username']));
