@@ -122,7 +122,31 @@ class Stories{
                     $sanitizedAssoc['time-size'],
                     $sanitizedAssoc['epic-id']
                 );
-                $Api->insertRecord($query);
+                $query->execute();
+
+                $query->bind_result($id,$name,$description,$owner,$sprint_id,$priority,$dependency,$time_size,$epic_id,$status);
+        
+                while($query->fetch()){
+                    $newRecord['id'] = $id;
+                    $newRecord['name'] = $name;
+                    $newRecord['description'] = $description;
+                    $newRecord['owner'] = $owner;
+                    $newRecord['sprint_id'] = $sprint_id;
+                    $newRecord['priority'] = $priority;
+                    $newRecord['dependency'] = $dependency;
+                    $newRecord['time_size'] = $time_size;
+                    $newRecord['epic_id'] = $epic_id;
+                    $newRecord['status'] = $status;
+                }
+                $query->free_result();
+        
+                if($newRecord['id']){
+                    header("HTTP/1.0 201 Created");
+                    $result = array("success"=>1,"notice"=>"Record created","res"=>$newRecord);
+                    echo json_encode($result, JSON_PRETTY_PRINT);
+                } else {
+                    $this->badRequest('No record created, please check your parameters');
+                }
             }
         } else {
             $Api->badRequest($Api->checkToken()['message']);
