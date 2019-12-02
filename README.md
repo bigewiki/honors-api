@@ -61,7 +61,9 @@ ex: /stories/1
 
 #### /stories
 
-Will create a new story, requires, at the very least, a string value for the name parameter. Currently accepts parameters in form-data. Token with key 'token' required in header.
+Will create a new story, requires, at the very least, a string value for the name parameter. Currently accepts parameters in form-data. Token with key 'token' required in header. Response will output the new object.
+
+##### Request
 
 - Header > token: string (required)
 - name: string (required)
@@ -70,6 +72,22 @@ Will create a new story, requires, at the very least, a string value for the nam
 - dependency: int (optional) - this if a foreign key relating to the id of the parent story
 - time-size: int
 - epic-id: int - this is a foreign key relating to the id of the parent epic
+
+##### Response
+
+- success: int
+- notice: string
+- res: object
+- res.id: int
+- res.name: string
+- res.description: string
+- res.owner: int
+- res.sprint_id: int
+- res.priority: string
+- res.dependency: int
+- res.time_size: int
+- res.epic_id: int
+- res.status: string
 
 ### DELETE requests
 
