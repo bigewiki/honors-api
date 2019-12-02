@@ -96,7 +96,8 @@ class ApiInit extends mysqli{
         echo json_encode($output, JSON_PRETTY_PRINT);
     }
 
-    public function insertRecord(object $query){
+    public function insertRecord($query){
+        print_r($query);
         $query->execute();
 
         $query->bind_result($id,$name,$description,$owner,$sprint_id,$priority,$dependency,$time_size,$epic_id,$status);
