@@ -8,10 +8,54 @@
 
 No parameters required, will respond with all the stories as the result.
 
+##### Response
+
+- success: int
+- res: array
+- res[i].id: int
+- res[i].name: string
+- res[i].description: string
+- res[i].owner: int
+- res[i].sprint_id: int
+- res[i].priority: string
+- res[i].dependency: int
+- res[i].time_size: int
+- res[i].epic_id: int
+- res[i].status: string
+
 #### /stories/\${NUMBER}
 
 No parameters required, use the story id in the path to get the tasks and comments related to that story
 ex: /stories/1
+
+##### Response
+
+- success: int
+- res: object
+- res.story_id: int
+- res.story_name: string
+- res.story_description: string
+- res.story_owner: int
+- res.sprint_id: int
+- res.sprint_start: date
+- res.sprint_end: date
+- res.upstream_dependency: int
+- res.story_size: int
+- res.story_epic: int
+- res.story_status: string
+- res.tasks: array
+- res.tasks[i]: object
+- res.tasks[i].task_id: int
+- res.tasks[i].task_name: string
+- res.tasks[i].story_name: string
+- res.tasks[i].owner_id: int
+- res.tasks[i].owner_name: string
+- res.comments: array
+- res.comments[i]: object
+- res.comments[i].comment_id: int
+- res.comments[i].parent_id: int
+- res.comments[i].content: string
+- res.comments[i].user: string
 
 ### POST requests
 
