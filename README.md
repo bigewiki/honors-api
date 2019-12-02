@@ -96,7 +96,6 @@ Will respond with a new API token to use in non-GET operations, a creation value
 ##### RESPONSE OBJECT:
 
 - success: int
-- 0 is false, 1 is true
 - res: object
 - res.creation: datetime
 - res.expiration: datetime
@@ -106,4 +105,13 @@ Will respond with a new API token to use in non-GET operations, a creation value
 
 Will respond with either an error or success message depending on the token sent in the request header. Expects a key of 'token' with the value of the token.
 
+##### Request
+
 - Header > token: string (required)
+
+##### Response
+
+- success: int
+- res: object
+- res.valid: bool
+- res.message: string
