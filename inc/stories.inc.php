@@ -145,7 +145,7 @@ class Stories{
                     $result = array("success"=>1,"notice"=>"Record created","res"=>$newRecord);
                     echo json_encode($result, JSON_PRETTY_PRINT);
                 } else {
-                    $this->badRequest('No record created, please check your parameters');
+                    $Api->badRequest('No record created, please check your parameters');
                 }
             }
         } else {

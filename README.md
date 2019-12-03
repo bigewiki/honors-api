@@ -70,8 +70,8 @@ Will create a new story, requires, at the very least, a string value for the nam
 - description: string (optional)
 - priority: string (optional)
 - dependency: int (optional) - this if a foreign key relating to the id of the parent story
-- time-size: int
-- epic-id: int - this is a foreign key relating to the id of the parent epic
+- time-size: int (optional)
+- epic-id: int (optional) - this is a foreign key relating to the id of the parent epic
 
 ##### Response
 
