@@ -61,7 +61,7 @@ ex: /stories/1
 
 #### /stories
 
-Will create a new story, requires, at the very least, a string value for the name parameter. Currently accepts parameters in form-data. Token with key 'token' required in header. Response will output the new object.
+Will create a new story, requires, at the very least, a string value for the name parameter. Expects request body to be in JSON format. Token with key 'token' required in header. Response will output the new object.
 
 ##### Request
 
