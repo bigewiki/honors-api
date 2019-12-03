@@ -105,22 +105,22 @@ class Stories{
         global $Api;
         //check token
         if($Api->checkToken()['valid']){
+            $requestBody = json_decode(file_get_contents('php://input'));
             //err if missing name param
-            if(!$_POST['name']){
+            if(!$requestBody->name){
                 $Api->badRequest('Story name parameter missing');
             } else {
                 $query = $Api->prepare("CALL createStory(?,?,?,?,?,?)");
-
-                $sanitizedAssoc = $Api->sanitizeAssoc($_POST);
+                $cleanRequest = $Api->sanitizeAssoc((array)$requestBody);
 
                 $query->bind_param(
                     'sssiii',
-                    $sanitizedAssoc['name'],
-                    $sanitizedAssoc['description'],
-                    $sanitizedAssoc['priority'],
-                    $sanitizedAssoc['dependency'],
-                    $sanitizedAssoc['time-size'],
-                    $sanitizedAssoc['epic-id']
+                    $cleanRequest['name'],
+                    $cleanRequest['description'],
+                    $cleanRequest['priority'],
+                    $cleanRequest['dependency'],
+                    $cleanRequest['time-size'],
+                    $cleanRequest['epic-id']
                 );
                 $query->execute();
 
@@ -175,15 +175,15 @@ class Stories{
             $query->bind_param(
                 'issiisiiis',
                 $route,
-                $requestBody->name,
-                $requestBody->description,
-                $requestBody->owner,
-                $requestBody->sprint,
-                $requestBody->priority,
-                $requestBody->dependency,
-                $requestBody->size,
-                $requestBody->epic,
-                $requestBody->status
+                $cleanRequest['name'],
+                $cleanRequest['description'],
+                $cleanRequest['owner'],
+                $cleanRequest['sprint'],
+                $cleanRequest['priority'],
+                $cleanRequest['dependency'],
+                $cleanRequest['size'],
+                $cleanRequest['epic'],
+                $cleanRequest['status']
             );
             $query->execute();
             if($query->error == "Story not found"){
