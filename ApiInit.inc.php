@@ -96,7 +96,7 @@ class ApiInit extends mysqli{
         echo json_encode($output, JSON_PRETTY_PRINT);
     }
 
-    public function deleteRecord(object $query, int $targetId, string $tableName){
+    public function deleteRecord($query, int $targetId, string $tableName){
         $query->execute();
         if($query->affected_rows == 1){
             $result = array("success"=>1,"notice"=>"Record $targetId deleted from $tableName");
@@ -107,8 +107,8 @@ class ApiInit extends mysqli{
     }
 
     public function checkToken(){
-        if(getallheaders()['token']){
-            $fullToken = getallheaders()['token'];
+        if(getallheaders()['Token']){
+            $fullToken = getallheaders()['Token'];
             $prefix = explode(".",$fullToken)[0];
             $prefix = $this->real_escape_string(trim($prefix));
             $query = $this->prepare("CALL checkKey(?)");
