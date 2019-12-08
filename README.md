@@ -114,6 +114,8 @@ Use the story id in the path to update that story. Will fail if the story does n
 ex path: /stories/34
 ex body: {"name":"my homework","status":"in progress"}
 
+##### Request
+
 - Header > token: string (required)
 - name: string (optional)
 - description: string (optional)
@@ -124,6 +126,22 @@ ex body: {"name":"my homework","status":"in progress"}
 - size: int (optional)
 - epic: int (optional)
 - status: string (optional)
+
+##### Response
+
+- success: int
+- res: object
+- res.story_id: int
+- res.story_name: string
+- res.story_description: string
+- res.story_owner: int
+- res.sprint_id: int
+- res.sprint_start: date
+- res.sprint_end: date
+- res.upstream_dependency: int
+- res.story_size: int
+- res.story_epic: int
+- res.story_status: string
 
 ## SPRINTS
 
