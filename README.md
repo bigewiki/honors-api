@@ -96,7 +96,14 @@ Will create a new story, requires, at the very least, a string value for the nam
 Use the story id in the path to delete that story. Will fail if story has associated comments, tasks, or child dependencies (foreign key check failure). Also requires token to be sent in header (key of 'token').
 ex: /stories/34
 
+##### Request
+
 - Header > token: string (required)
+
+##### Response
+
+- success: int
+- notice: string
 
 ### PATCH requests
 

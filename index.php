@@ -12,7 +12,7 @@ switch ($Api->getUri()[0]) {
         include_once 'inc/users.inc.php';
         break;
     default:
-        $Api->notFound();   
+        $Api->notFound();
 }
 
 $Api->close();
